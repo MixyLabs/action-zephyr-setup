@@ -238,6 +238,9 @@ runs:
       shell: bash
       run: |
         IFS=":"
+        if [ ! -d sysroots ]; then
+            ${SETUP_FILE} ${SETUP_OPT}h
+        fi
         ${SETUP_FILE} ${SETUP_OPT}c
 
     - name: Cache ccache data
