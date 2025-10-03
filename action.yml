@@ -201,7 +201,6 @@ runs:
         pip3 install -r zephyr/scripts/requirements-base.txt
 
     - name: Restore cache for Zephyr SDK
-      uses: actions/checkout@v4
       id: cache-toolchain-restore
       uses: actions/cache/restore@v4
       with:
