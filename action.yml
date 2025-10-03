@@ -96,10 +96,7 @@ runs:
         if [ "${{ runner.os }}" = "Linux" ]; then
           sudo rm -f /var/lib/man-db/auto-update
           sudo apt-get update -y
-          sudo apt-get install -y ninja-build ccache gperf
-          if [ "${{ runner.arch }}" = "X64" ]; then
-            sudo apt-get install -y libc6-dev-i386 g++-multilib
-          fi
+          sudo apt-get install -y ninja-build
         elif [ "${{ runner.os }}" = "macOS" ]; then
           brew install ninja ccache qemu dtc gperf
         elif [ "${{ runner.os }}" = "Windows" ]; then
@@ -198,7 +195,7 @@ runs:
       # The direct use of pip3 should be removed after zephyr 4.1 has been phased out, and the west
       # command should only be used instead.
       run: |
-        west packages pip --install --ignore-venv-check || pip3 install -r zephyr/scripts/requirements.txt
+        pip3 install -r zephyr/scripts/requirements-base.txt
 
     - name: Cache Zephyr SDK
       id: cache-toolchain
