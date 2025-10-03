@@ -183,19 +183,31 @@ runs:
         echo "SETUP_FILE=${setup_file}" >> $GITHUB_ENV
         echo "SETUP_OPT=${setup_opt}" >> $GITHUB_ENV
 
-    - name: Cache Python packages
+    - name: Cache virtualenv
+      id: cache-venv
       uses: actions/cache@v4
       with:
-        path: ${{ env.PIP_CACHE_PATH }}/
         key: pip-${{ runner.os }}-${{ hashFiles(format('{0}/zephyr/scripts/requirements*.txt', inputs.base-path)) }}
+        path: .venv
 
     - name: Install Python packages
+      if: steps.cache-venv.outputs.cache-hit != 'true'
       working-directory: ${{ inputs.base-path }}
       shell: bash
       # The direct use of pip3 should be removed after zephyr 4.1 has been phased out, and the west
       # command should only be used instead.
       run: |
+        python3 -m venv .venv
+        source .venv/bin/activate
         pip3 install -r zephyr/scripts/requirements-base.txt
+        echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
+        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+
+    - name: Activate virtualenv
+      if: steps.cache-venv.outputs.cache-hit == 'true'
+      shell: bash
+      run: |
+        source .venv/bin/activate
 
     - name: Cache Zephyr SDK
       id: cache-toolchain
