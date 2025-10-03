@@ -189,7 +189,7 @@ runs:
     - name: Cache Python packages
       uses: actions/cache@v4
       with:
-        path: ${{ env.PIP_CACHE_PATH }}/
+        path: ~/.cache/pip/
         key: pip-${{ runner.os }}-${{ hashFiles(format('{0}/zephyr/scripts/requirements*.txt', inputs.base-path)) }}
 
     - name: Install Python packages
@@ -204,7 +204,7 @@ runs:
       id: cache-toolchain-restore
       uses: actions/cache/restore@v4
       with:
-        path: ${{ inputs.base-path }}/zephyr-sdk/
+        path: ./zephyr-sdk/
         key: ${{ env.SDK_FILE }}-${{ github.event.repository.name }}-${{ inputs.toolchains }}
 
 
@@ -226,7 +226,7 @@ runs:
       id: cache-toolchain-save
       uses: actions/cache/save@v4
       with:
-        path: ${{ inputs.base-path }}/zephyr-sdk/
+        path: ./zephyr-sdk/
         key: ${{ steps.cache-toolchain-restore.outputs.cache-primary-key }}
 
     - name: Setup Zephyr SDK
