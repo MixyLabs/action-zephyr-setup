@@ -219,7 +219,6 @@ runs:
         fi
 
     - name: Setup Zephyr SDK
-      if: steps.cache-toolchain.outputs.cache-hit != 'true'
       working-directory: ${{ inputs.base-path }}/zephyr-sdk
       shell: bash
       run: |
@@ -228,16 +227,6 @@ runs:
         for toolchain in $TOOLCHAINS; do
             ${SETUP_FILE} ${SETUP_OPT}t $toolchain
         done
-        if [ ! -d sysroots ]; then
-            ${SETUP_FILE} ${SETUP_OPT}h
-        fi
-        ${SETUP_FILE} ${SETUP_OPT}c
-
-    - name: Register Zephyr SDK
-      working-directory: ${{ inputs.base-path }}/zephyr-sdk
-      shell: bash
-      run: |
-        IFS=":"
         if [ ! -d sysroots ]; then
             ${SETUP_FILE} ${SETUP_OPT}h
         fi
