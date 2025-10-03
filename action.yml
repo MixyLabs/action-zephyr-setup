@@ -96,7 +96,7 @@ runs:
         if [ "${{ runner.os }}" = "Linux" ]; then
           sudo rm -f /var/lib/man-db/auto-update
           sudo apt-get update -y
-          sudo apt-get install -y ninja-build ccache gperf
+          sudo apt-get install -y ninja-build gperf
           if [ "${{ runner.arch }}" = "X64" ]; then
             sudo apt-get install -y libc6-dev-i386 g++-multilib
           fi
@@ -198,7 +198,7 @@ runs:
       # The direct use of pip3 should be removed after zephyr 4.1 has been phased out, and the west
       # command should only be used instead.
       run: |
-        west packages pip --install --ignore-venv-check || pip3 install -r zephyr/scripts/requirements.txt
+        pip3 install -r zephyr/scripts/requirements-base.txt
 
     - name: Cache Zephyr SDK
       id: cache-toolchain
@@ -207,7 +207,7 @@ runs:
         path: ${{ inputs.base-path }}/zephyr-sdk
         key: ${{ env.SDK_FILE }}-${{ github.event.repository.name }}-${{ inputs.toolchains }}
 
-    - if: ${{ steps.cache-toolchain.outputs.cache-hit != 'true' }}
+    - if: steps.cache-toolchain.outputs.cache-hit != 'true'
       working-directory: ${{ inputs.base-path }}
       name: Download Zephyr SDK
       shell: bash
